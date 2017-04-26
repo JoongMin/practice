@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Jquery</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!-- [if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif] -->
+    <style type="text/css">
+        html *{margin:0; padding:0; font-family:'맑은 고딕',Malgun Gothic; color:#333;}
+        ol li, ul li{list-style-type:none;}
+        input[type=checkbox],
+        input[type=radio]{vertical-align:middle;}
+
+        .block{display:block;}
+        img{vertical-align:top;}
+        #wrap{position:relative;}
+
+        .offset{position:absolute; top:300px; left:369px; width:5px; height:5px; background:#00ffff;}
+        .dragBox{position:absolute; top:60px; left:30px; width:50px; height:50px; background:#ffff00; z-index:100;}
+
+        .over{overflow:hidden; position:relative; width:300px; height:200px; border:1px solid #bababa;}
+        .bar1{position:absolute; bottom:0; left:0; width:10px; height:0; background:#ff0000;}
+        .bar2{position:absolute; bottom:0; right:0; width:0; height:10px; background:#ff0000;}
+        .bar3{position:absolute; top:0; right:0; width:10px; height:0; background:#ff0000;}
+        .bar4{position:absolute; top:0; left:0; width:0; height:10px; background:#ff0000;}
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            not_check();
+            box_offset();
+            dragbox();
+            overBox();
+        });
+
+        function not_check(){
+            $('.list').find('input[type="checkbox"]:not(:checked)').attr('disabled','disabled');
+        }
+
+        function box_offset(){
+            var off_x = $('.offset').offset().left;
+            var off_y = $('.offset').offset().top;
+
+            $('.offset_txt').html('left = '+off_x+' top = '+off_y);
+        }
+
+        function dragbox(){
+            $('.dragBox').mousedown(function(event){
+                var x_left = event.clientX - $('.dragBox').offset().left;
+                var y_top = event.clientY - $('.dragBox').offset().top;
+                $(document).mousemove(function(event){
+                    var x_accept = event.clientX - x_left;
+                    var y_accept = event.clientY - y_top;
+
+                    $('.dragBox').css({'left':x_accept+'px','top':y_accept+'px'});
+                }).mouseup(function(){
+                    $(this).off('mousemove');
+                });
+            });
+        }
+
+        function overBox(){
+            var over = $('.over');
+
+
+            over.bind({
+                mouseover : function(){
+                    $('.over>.bar1, .over>.bar3').stop().animate({
+                        height : over.height()
+                    },500);
+
+                    $('.over>.bar2, .over>.bar4').stop().animate({
+                        width : over.width()
+                    },500);
+                },
+
+                mouseleave : function(){
+                    $('.over>.bar1, .over>.bar3').stop().animate({
+                        height : 0
+                    },500);
+
+                    $('.over>.bar2, .over>.bar4').stop().animate({
+                        width : 0
+                    },500)
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="wrap">
+        <div class="offset"></div>
+        <span class="block">Jquery 최신버전 Url : http://code.jquery.com/jquery-latest.min.js</span>
+        <ul class="list">
+            <li><input type="checkbox" id="check_1" name="" /> <label for="check_1">not_1</label></li>
+            <li><input type="checkbox" id="check_2" name="" checked="checked" /> <label for="check_2">not_2</label></li>
+            <li><input type="checkbox" id="check_3" name="" /> <label for="check_3">not_3</label></li>
+        </ul>
+        <span class="offset_txt block"></span>
+        <div class="dragBox"></div>
+
+
+        <div class="over">
+            <span class="bar1"></span>
+            <span class="bar2"></span>
+            <span class="bar3"></span>
+            <span class="bar4"></span>
+        </div>
+    </div>
+</body>
+</html>
